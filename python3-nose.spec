@@ -25,7 +25,7 @@ Summary:        Discovery-based unittest extension for Python 3
 License:        LGPLv2+ and Public Domain
 URL:            https://nose.readthedocs.org/en/latest/
 #Source0:        %pypi_source
-Source0:        http://pypi.python.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
+Source0:        http://pypi.python.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 # Fix python 3.5 compat
 # https://github.com/nose-devs/nose/pull/983
 Patch1:         python-nose-py35.patch
