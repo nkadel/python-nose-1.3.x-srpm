@@ -1,7 +1,7 @@
 %bcond_without python3
 #%bcond_with python36_module
 
-%global modname nose
+%global srcname nose
 
 # Enable building without docs to avoid a circular dependency between this and python-sphinx
 #
@@ -29,7 +29,7 @@ coverage and profiling, flexible attribute-based test selection,\
 output capture and more.\
 
 
-Name:           python-%{modname}
+Name:           python-%{srcname}
 Version:        1.3.7
 #Release:        30%%{?dist}
 Release:        0.30%{?dist}
@@ -72,20 +72,20 @@ BuildRequires:  %{_bindir}/sphinx-build-3
 Documentation for Nose.
 
 %if %{with python2}
-%package -n python2-%{modname}
+%package -n python2-%{srcname}
 Summary:        %{summary}
 BuildRequires:  python2-devel
 BuildRequires:  python2-setuptools
 BuildRequires:  python2-coverage >= 3.4-1
 Requires:       python2-setuptools
-%{?python_provide:%python_provide python2-%{modname}}
+%{?python_provide:%python_provide python2-%{srcname}}
 
-%description -n python2-%{modname}
+%description -n python2-%{srcname}
 %{desc}
 %endif
 
 %if %{with python3}
-%package -n python3-%{modname}
+%package -n python3-%{srcname}
 Summary:        %{summary}
 #%if %{with python36_module}
 #BuildRequires:  python3-devel
@@ -100,10 +100,10 @@ Requires:       python3
 Requires(post): python3
 Requires(postun): python3
 Requires:       python3-setuptools
-%{?python_provide:%python_provide python3-%{modname}}
-Obsoletes:      platform-python-%{modname} < %{version}-%{release}
+%{?python_provide:%python_provide python3-%{srcname}}
+Obsoletes:      platform-python-%{srcname} < %{version}-%{release}
 
-%description -n python3-%{modname}
+%description -n python3-%{srcname}
 %{desc}
 
 This package installs the nose module and nosetests3 program that can discover
@@ -112,17 +112,17 @@ python3 unit tests.
 
 %prep
 %setup -qc
-pushd %{modname}-%{version}
+pushd %{srcname}-%{version}
 %autopatch -p1
 dos2unix examples/attrib_plugin.py
 cp -pr lgpl.txt AUTHORS CHANGELOG examples NEWS README.txt ..
 popd
 
 %if %{with python3}
-mv %{modname}-%{version} python3
+mv %{srcname}-%{version} python3
 %endif
 %if %{with python2}
-mv %{modname}-%{version} python2
+mv %{srcname}-%{version} python2
 %endif
 
 %build
@@ -193,29 +193,29 @@ popd
 %endif
 
 %if %{with python3}
-%post -n python3-%{modname}
-alternatives --add-slave python3 %{_bindir}/python%{python3_version} \
-    %{_bindir}/nosetests-3 \
-    nosetests-3 \
-    %{_bindir}/nosetests-%{python3_version}
-
-alternatives --add-slave python3 %{_bindir}/python%{python3_version} \
-    %{_mandir}/man1/nosetests-3.1.gz \
-    nosetests-3-man \
-    %{_mandir}/man1/nosetests-%{python3_version}.1.gz
-
-%postun -n python3-%{modname}
-if [ $1 -eq 0 ]; then
-  alternatives --remove-slave python3 \
-      %{_bindir}/python%{python3_version} nosetests-3
-
-  alternatives --remove-slave python3 \
-      %{_bindir}/python%{python3_version} nosetests-3-man
-fi
+#%post -n python3-%{srcname}
+#alternatives --add-slave python3 %{_bindir}/python%{python3_version} \
+#    %{_bindir}/nosetests-3 \
+#    nosetests-3 \
+#    %{_bindir}/nosetests-%{python3_version}
+#
+#alternatives --add-slave python3 %{_bindir}/python%{python3_version} \
+#    %{_mandir}/man1/nosetests-3.1.gz \
+#    nosetests-3-man \
+#    %{_mandir}/man1/nosetests-%{python3_version}.1.gz
+#
+%postun -n python3-%{srcname}
+#if [ $1 -eq 0 ]; then
+#  alternatives --remove-slave python3 \
+#      %{_bindir}/python%{python3_version} nosetests-3
+#
+#  alternatives --remove-slave python3 \
+#      %{_bindir}/python%{python3_version} nosetests-3-man
+#fi
 %endif
 
 %if %{with python2}
-%files -n python2-%{modname}
+%files -n python2-%{srcname}
 %license lgpl.txt
 %{_bindir}/nosetests-2
 %{_bindir}/nosetests-%{python2_version}
@@ -227,7 +227,7 @@ fi
 %endif
 
 %if %{with python3}
-%files -n python3-%{modname}
+%files -n python3-%{srcname}
 %license lgpl.txt
 %ghost %{_bindir}/nosetests-3
 %{_bindir}/nosetests-%{python3_version}
