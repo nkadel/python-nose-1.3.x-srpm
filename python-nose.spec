@@ -1,7 +1,7 @@
 %bcond_without python3
-#%bcond_with python36_module
 
-%global srcname nose
+%global pypi_name nose
+%global pypi_version 1.3.7
 
 # Enable building without docs to avoid a circular dependency between this and python-sphinx
 #
@@ -29,8 +29,8 @@ coverage and profiling, flexible attribute-based test selection,\
 output capture and more.\
 
 
-Name:           python-%{srcname}
-Version:        1.3.7
+Name:           python-%{pypi_name}
+Version:        %{pypi_version}
 #Release:        30%%{?dist}
 Release:        0.30%{?dist}
 BuildArch:      noarch
@@ -38,7 +38,7 @@ BuildArch:      noarch
 License:        LGPLv2+ and Public Domain
 Summary:        Discovery-based unit test extension for Python
 URL:            https://nose.readthedocs.org/en/latest/
-Source0:        http://pypi.python.org/packages/source/n/nose/nose-%{version}.tar.gz
+Source0:        %{pypi_source}
 # Make compatible with coverage 4.1
 # https://github.com/nose-devs/nose/pull/1004
 Patch0:         python-nose-coverage4.patch
@@ -72,38 +72,33 @@ BuildRequires:  %{_bindir}/sphinx-build-3
 Documentation for Nose.
 
 %if %{with python2}
-%package -n python2-%{srcname}
+%package -n python2-%{pypi_name}
 Summary:        %{summary}
 BuildRequires:  python2-devel
 BuildRequires:  python2-setuptools
 BuildRequires:  python2-coverage >= 3.4-1
 Requires:       python2-setuptools
-%{?python_provide:%python_provide python2-%{srcname}}
+%{?python_provide:%python_provide python2-%{pypi_name}}
 
-%description -n python2-%{srcname}
+%description -n python2-%{pypi_name}
 %{desc}
 %endif
 
 %if %{with python3}
-%package -n python3-%{srcname}
+%package -n python%{python3_pkgversion}-%{pypi_name}
 Summary:        %{summary}
-#%if %{with python36_module}
-#BuildRequires:  python3-devel
-#BuildRequires:  python3-rpm-macros
-#%else
-BuildRequires:  python3-devel
-#%endif
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-coverage >= 3.4-1
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
+BuildRequires:  python%{python3_pkgversion}-coverage >= 3.4-1
 # for alternatives
 Requires:       python3
 Requires(post): python3
 Requires(postun): python3
-Requires:       python3-setuptools
-%{?python_provide:%python_provide python3-%{srcname}}
-Obsoletes:      platform-python-%{srcname} < %{version}-%{release}
+Requires:       python%{python3_pkgversion}-setuptools
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{pypi_name}}
+Obsoletes:      platform-python-%{pypi_name} < %{version}-%{release}
 
-%description -n python3-%{srcname}
+%description -n python%{python3_pkgversion}-%{pypi_name}
 %{desc}
 
 This package installs the nose module and nosetests3 program that can discover
@@ -112,17 +107,17 @@ python3 unit tests.
 
 %prep
 %setup -qc
-pushd %{srcname}-%{version}
+pushd %{pypi_name}-%{version}
 %autopatch -p1
 dos2unix examples/attrib_plugin.py
 cp -pr lgpl.txt AUTHORS CHANGELOG examples NEWS README.txt ..
 popd
 
 %if %{with python3}
-mv %{srcname}-%{version} python3
+mv %{pypi_name}-%{version} python3
 %endif
 %if %{with python2}
-mv %{srcname}-%{version} python2
+mv %{pypi_name}-%{version} python2
 %endif
 
 %build
@@ -193,7 +188,7 @@ popd
 %endif
 
 %if %{with python3}
-#%post -n python3-%{srcname}
+#%post -n python%{python3_pkgversion}-%{pypi_name}
 #alternatives --add-slave python3 %{_bindir}/python%{python3_version} \
 #    %{_bindir}/nosetests-3 \
 #    nosetests-3 \
@@ -204,7 +199,7 @@ popd
 #    nosetests-3-man \
 #    %{_mandir}/man1/nosetests-%{python3_version}.1.gz
 #
-%postun -n python3-%{srcname}
+%postun -n python%{python3_pkgversion}-%{pypi_name}
 #if [ $1 -eq 0 ]; then
 #  alternatives --remove-slave python3 \
 #      %{_bindir}/python%{python3_version} nosetests-3
@@ -215,7 +210,7 @@ popd
 %endif
 
 %if %{with python2}
-%files -n python2-%{srcname}
+%files -n python2-%{pypi_name}
 %license lgpl.txt
 %{_bindir}/nosetests-2
 %{_bindir}/nosetests-%{python2_version}
@@ -227,7 +222,7 @@ popd
 %endif
 
 %if %{with python3}
-%files -n python3-%{srcname}
+%files -n python%{python3_pkgversion}-%{pypi_name}
 %license lgpl.txt
 %ghost %{_bindir}/nosetests-3
 %{_bindir}/nosetests-%{python3_version}
