@@ -32,7 +32,7 @@ output capture and more.\
 Name:           python-%{pypi_name}
 Version:        %{pypi_version}
 #Release:        30%%{?dist}
-Release:        0.30%{?dist}
+Release:        0.31%{?dist}
 BuildArch:      noarch
 
 License:        LGPLv2+ and Public Domain
